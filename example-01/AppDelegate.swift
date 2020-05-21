@@ -27,10 +27,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
+    private var wasActive = false
+    
     func applicationDidBecomeActive(_ application: UIApplication) {
-        if let vc = self.rootNC?.viewControllers.first as? LoginController {
+        if let vc = self.rootNC?.viewControllers.first as? LoginController, self.wasActive {
             vc.checkTouchID()
         }
+    }
+    
+    func applicationWillResignActive(_ application: UIApplication) {
+        self.wasActive = true
     }
 
 }

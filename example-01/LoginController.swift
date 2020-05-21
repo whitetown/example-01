@@ -17,7 +17,8 @@ class LoginController: ScrollViewController {
     private let touchSwitch = TouchIDSwitch()
     
     private let lastusername = "lastusername"
-    
+    private let useTouchID   = "useTouchID"
+
     struct FormData {
         var username = ""
         var password = ""
@@ -44,7 +45,8 @@ class LoginController: ScrollViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if self.form.username.count > 0 {
+        if  SecureManager.retrievePassword(login: self.useTouchID) != nil
+            && self.form.username.count > 0 {
             displayTouchID()
         }
     }
@@ -53,7 +55,7 @@ class LoginController: ScrollViewController {
         self.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
     }
     
-    public func checkTouchID() { 
+    public func checkTouchID() {
         let context = LAContext()
         var error: NSError?
 
@@ -200,12 +202,15 @@ private extension LoginController {
                 _ = SecureManager.deleteLogin(login: previoususername)
             }
         }
+        _ = SecureManager.deleteLogin(login: self.lastusername)
         _ = SecureManager.storeLogin(login: self.lastusername, password: self.form.username)
 
         if self.form.touchID {
             _ = SecureManager.storeLogin(login: self.form.username, password: self.form.password)
+            _ = SecureManager.storeLogin(login: self.useTouchID, password: "true")
         } else {
             _ = SecureManager.deleteLogin(login: self.form.username)
+            _ = SecureManager.deleteLogin(login: self.useTouchID)
         }
         
         openMovies()
