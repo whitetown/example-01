@@ -63,8 +63,8 @@ class SecureManager {
     static func addToKeychain(query : [String:Any]) -> Bool {
         let result = SecItemAdd(query as CFDictionary, nil)
         if #available(iOS 11.3, *) {
-            let msg = SecCopyErrorMessageString(result, nil)
-            print (msg)
+//            let msg = SecCopyErrorMessageString(result, nil)
+//            print (msg)
         } else {
             // Fallback on earlier versions
         }
